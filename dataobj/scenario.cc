@@ -20,6 +20,7 @@
 // error popup
 #include "../gui/simwin.h"
 #include "../gui/scenario_info.h"
+#include "../gui/messagebox.h"
 
 // scripting
 #include "../script/script.h"
@@ -32,6 +33,8 @@
 #include "scenario.h"
 
 #include <stdarg.h>
+
+#define is_scenario()  welt->get_scenario()->is_scripted()
 
 // cache the scenario text files
 static plainstringhashtable_tpl<plainstring> cached_text_files;
@@ -559,6 +562,44 @@ const char* scenario_t::is_schedule_allowed(const player_t* player, const schedu
 	return NULL;
 }
 
+
+bool scenario_t::scenario_check_convoy(karte_t *welt, const player_t* player, bool local)
+{
+	if (!is_scenario()) {
+		return true;
+	}
+	const char* err = welt->get_scenario()->is_convoy_allowed(player);
+	if (err) {
+		if (*err  &&  local) {
+			koord pos = message_t::get_coord_from_text(err);
+			if (pos != koord::invalid) {
+				create_win( new news_loc(err, pos), w_time_delete, magic_none);
+			}
+			else {
+				create_win( new news_img(err), w_time_delete, magic_none);
+			}
+		}
+		return false;
+	}
+	return true;
+}
+
+const char* scenario_t::is_convoy_allowed(const player_t* player)
+{
+
+	if (env_t::server) {
+		// networkgame: allowed
+		return NULL;
+	}
+	// call script
+	if (what_scenario == SCRIPTED) {
+		static plainstring msg;
+		const char *err = script->call_function(script_vm_t::FORCE, "is_convoy_allowed", msg, (uint8)(player  ?  player->get_player_nr() : PLAYER_UNOWNED));
+
+		return err == NULL ? msg.c_str() : NULL;
+	}
+	return NULL;
+}
 
 const char* scenario_t::get_error_text()
 {
