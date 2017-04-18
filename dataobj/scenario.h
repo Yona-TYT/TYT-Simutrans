@@ -407,7 +407,17 @@ public:
 	 * @return null if allowed, an error message otherwise
 	 */
 	const char* is_schedule_allowed(const player_t* player, const schedule_t* schedule);
-
+	
+	/**
+	 * Checks if  convoy in the depot is correct.
+	 *
+	 * @param player player
+	 *
+	 * @return null if allowed, an error message otherwise
+	 */
+	const char* is_convoy_allowed(const player_t* player);
+	
+	bool scenario_check_convoy(karte_t *welt, const player_t* player, bool local);
 
 	/// @return debug dump of forbidden tools
 	const char* get_forbidden_text();
