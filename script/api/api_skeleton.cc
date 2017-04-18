@@ -253,4 +253,18 @@ register_function("is_work_allowed_here");
  */
 register_function("is_schedule_allowed");
 
+/**
+ * Called when a convoy is started from the depot.
+ *
+ * @warning Function will NOT be called in network games.
+ *
+ * @param pl player number
+ *
+ * @return null if allowed, an error message otherwise
+ * @typemask string(integer)
+ * @ingroup scen_skel
+ * @ingroup quick_return_func
+ */
+register_function("is_convoy_allowed");
+
 #endif
