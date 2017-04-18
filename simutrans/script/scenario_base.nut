@@ -71,6 +71,10 @@ function is_schedule_allowed(pl, schedule)
 	return null
 }
 
+function is_convoy_allowed(pl)
+{
+	return null
+}
 
 // declare getter functions
 function get_map_file()
