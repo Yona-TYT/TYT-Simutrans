@@ -44,6 +44,7 @@
 #include "../dataobj/schedule.h"
 #include "../dataobj/translator.h"
 #include "../dataobj/environment.h"
+#include "../dataobj/scenario.h"
 
 #include "../player/simplay.h"
 
@@ -1216,7 +1217,10 @@ bool depot_frame_t::action_triggered( gui_action_creator_t *comp, value_t p)
 				destroy_win( (ptrdiff_t)cnv->get_schedule() );
 				// only then call the tool to start
 				char tool = event_get_last_control_shift() == 2 ? 'B' : 'b'; // start all with CTRL-click
-				depot->call_depot_tool( tool, cnv, NULL);
+				scenario_t *scen = welt->get_scenario();
+				player_t *player = welt->get_active_player();
+				if ( scen->scenario_check_convoy(welt,  player, true) )
+					depot->call_depot_tool( tool, cnv, NULL);
 			}
 		}
 		else if(  comp == &bt_schedule  ) {
